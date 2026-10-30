@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Unit Converter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root{--bg:#ece6d8;--card:#f7f3ea;--ink:#243a2c;--mut:#5c6b5f;--line:#d6cfbc;--acc:#2b4a35;--acc2:#b5553a;--chip:#dfeadf;--chip2:#f8e6e0;--inp:#fff;--onacc:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16221a;--card:#1f2f24;--ink:#ece6d8;--mut:#a3b3a6;--line:#34493a;--acc:#8fbf9a;--acc2:#e0866a;--chip:#2a4232;--chip2:#3a2b27;--inp:#2a3d30;--onacc:#16221a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16221a;--card:#1f2f24;--ink:#ece6d8;--mut:#a3b3a6;--line:#34493a;--acc:#8fbf9a;--acc2:#e0866a;--chip:#2a4232;--chip2:#3a2b27;--inp:#2a3d30;--onacc:#16221a;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,"Helvetica Neue","Sarabun",sans-serif;display:flex;flex-direction:column;overflow:hidden}
+header{padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--acc2);background:var(--card)}
+header h1{font-size:16px;margin:0;flex:1;letter-spacing:.3px}
+header small{display:block;color:var(--mut);font-weight:400;font-size:11px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--mut);padding:6px 9px;font-size:12px;font-weight:600}
+.seg button.on{background:var(--acc);color:var(--onacc)}
+.by{font-size:12px;font-weight:700;color:var(--acc2);white-space:nowrap}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--line)}
+#th{border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:6px 9px;font-size:14px}
+main{flex:1;overflow-y:auto;padding:12px 12px 16px;-webkit-overflow-scrolling:touch}
+.card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:10px;padding:12px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--acc)}
+.row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.f{flex:1;min-width:0}
+.f label{display:block;font-size:11px;color:var(--mut);margin-bottom:2px}
+input,select{width:100%;font:inherit;font-size:16px;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.swap{border:1px solid var(--acc);color:var(--acc);background:none;border-radius:8px;padding:9px 10px;font-weight:700;margin-top:14px}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.r{background:var(--chip);border-radius:8px;padding:7px 9px;overflow:hidden}
+.r b{display:block;font-size:16px;font-variant-numeric:tabular-nums;word-break:break-all}
+.r span{font-size:11px;color:var(--mut)}
+.r.i span::after{content:" · Imperial"}.r.s span::after{content:" · SI"}
+.r.big{grid-column:1/-1;background:var(--acc);color:var(--onacc)}.r.big span{color:var(--onacc);opacity:.8}
+.note{font-size:11px;color:var(--mut);margin-top:6px}
+select{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+input{background:var(--inp)}
+.swap{background:var(--acc);color:var(--onacc)}
+.r.i{background:var(--chip2)}.r.i b{color:var(--acc2)}
+.card{background:var(--card);background:color-mix(in srgb,var(--card) 80%,transparent)}
+.seg{border-radius:999px;background:var(--acc);border-color:var(--acc)}
+.seg button{color:var(--onacc);opacity:.75}
+.seg button.on{background:var(--onacc);color:var(--acc);opacity:1;border-radius:999px}
+.bar{background:transparent;border:0}
+header,.bar,main,nav{position:relative;z-index:1}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--acc);opacity:.1;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Cdefs%3E%3Cg id='p'%3E%3Cellipse cx='-24' cy='-5' rx='26' ry='6' transform='rotate(-25)'/%3E%3Cellipse cx='24' cy='-5' rx='26' ry='6' transform='rotate(25)'/%3E%3C/g%3E%3C/defs%3E%3Cpath d='M100 300C96 200 108 100 140 10' fill='none' stroke='%23000' stroke-width='3'/%3E%3Cuse href='%23p' transform='translate(101 260) scale(1.1)'/%3E%3Cuse href='%23p' transform='translate(102 220) scale(1.05)'/%3E%3Cuse href='%23p' transform='translate(105 180)'/%3E%3Cuse href='%23p' transform='translate(112 140) scale(.9)'/%3E%3Cuse href='%23p' transform='translate(122 100) scale(.8)'/%3E%3Cuse href='%23p' transform='translate(133 60) scale(.65)'/%3E%3Cuse href='%23p' transform='translate(141 25) scale(.5)'/%3E%3C/svg%3E") no-repeat right -40px bottom 60px/340px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Cdefs%3E%3Cg id='p'%3E%3Cellipse cx='-24' cy='-5' rx='26' ry='6' transform='rotate(-25)'/%3E%3Cellipse cx='24' cy='-5' rx='26' ry='6' transform='rotate(25)'/%3E%3C/g%3E%3C/defs%3E%3Cpath d='M100 300C96 200 108 100 140 10' fill='none' stroke='%23000' stroke-width='3'/%3E%3Cuse href='%23p' transform='translate(101 260) scale(1.1)'/%3E%3Cuse href='%23p' transform='translate(102 220) scale(1.05)'/%3E%3Cuse href='%23p' transform='translate(105 180)'/%3E%3Cuse href='%23p' transform='translate(112 140) scale(.9)'/%3E%3Cuse href='%23p' transform='translate(122 100) scale(.8)'/%3E%3Cuse href='%23p' transform='translate(133 60) scale(.65)'/%3E%3Cuse href='%23p' transform='translate(141 25) scale(.5)'/%3E%3C/svg%3E") no-repeat right -40px bottom 60px/340px}
+nav{display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:0}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:8px 2px 7px;font-size:10px;font-weight:600;border-top:3px solid transparent}
+nav button i{display:block;font-style:normal;font-size:19px}
+nav button.on{color:var(--acc);border-top-color:var(--acc2)}
+</style>
+</head>
+<body>
+<header><h1>Unit Converter</h1><span class="by">By.Tonglaong</span></header>
+<div class="bar">
+<div class="seg" id="sys"><button data-s="s" class="on">SI</button><button data-s="i">Imp</button></div>
+<button id="th">◐</button></div>
+<main id="main"></main>
+<nav id="nav"></nav>
+<script>
+const $=(s,e=document)=>e.querySelector(s);
+const fmt=x=>!isFinite(x)?'—':Number(x.toPrecision(7)).toLocaleString('en',{maximumFractionDigits:8});
+const L=a=>a.map(([n,f,s])=>({n,s,to:v=>v*f,from:v=>v/f}));
+let sysMode='s',cur=0,V=400;
+const PIPE={8:.25,10:.375,15:.5,20:.75,25:1,32:1.25,40:1.5,50:2,65:2.5,80:3,100:4,125:5,150:6,200:8,250:10,300:12,350:14,400:16,450:18,500:20,600:24,700:28,750:30,800:32,900:36,1000:40,1050:42,1200:48,1350:54,1500:60};
+const tempU=[{n:'°C',s:'s',to:v=>v,from:v=>v},{n:'°F',s:'i',to:v=>(v-32)*5/9,from:v=>v*9/5+32}];
+const smokeU=[{n:'% obs/m',s:'s',to:v=>v,from:v=>v},{n:'% obs/ft',s:'i',to:v=>100*(1-Math.pow(1-v/100,1/.3048)),from:v=>100*(1-Math.pow(1-v/100,.3048))}];
+const battU=[{n:'Ah',to:v=>v,from:v=>v},{n:'kWh',to:v=>v*1000/V,from:v=>v*V/1000}];
+const TABS=[
+{n:'Fire',i:'🔥',t:'Fire System & Pressure',c:[
+ {t:'Pressure',v:1,u:L([['Pa',1,'s'],['kPa',1e3,'s'],['mbar',100,'s'],['bar',1e5,'s'],['PSI',6894.757,'i']])},
+ {t:'Gas / Airflow Concentration',v:1000,u:L([['ppb',1e-3],['ppm',1],['%',1e4]])},
+ {t:'Smoke Obscuration',v:3,u:smokeU,note:'Beer–Lambert: 1−(1−o)^(ระยะ) แปลงแบบไม่เป็นเชิงเส้น'}]},
+{n:'Civil',i:'🏗️',t:'Civil & Raised Floor',c:[
+ {t:'Dimensions',pipe:1,v:600,u:L([['mm',.001,'s'],['cm',.01,'s'],['m',1,'s'],['in',.0254,'i'],['ft',.3048,'i']]),def:0,note:'mm ↔ in ใช้ค่าตามตารางขนาดท่อ (เช่น 100 mm = 4 in, 600 mm = 24 in) ถ้าค่าไม่อยู่ในตาราง จะคำนวณตามจริง (1 in = 25.4 mm)'},
+ {t:'Particle Size / Smoke',v:10,u:L([['µm',1e-6],['mm',1e-3]])},
+ {t:'Floor Load Bearing',v:1220,u:L([['kg/m²',1,'s'],['kN/m²',101.972,'s'],['lbs/ft² (PSF)',4.88243,'i']])},
+ {t:'Rack Height',v:42,u:L([['U',44.45],['mm',1,'s'],['in',25.4,'i']]),note:'1U = 44.45 mm = 1.75 in'}]},
+{n:'HVAC',i:'❄️',t:'HVAC & Airflow',c:[
+ {t:'Temperature',v:24,u:tempU},
+ {t:'Cooling Capacity',v:10,u:L([['kW',1000,'s'],['TR',3516.85,'i'],['BTU/hr',.293071,'i']])},
+ {t:'Airflow Volume',v:1000,u:L([['m³/hr',1,'s'],['L/min',.06,'s'],['CFM',1.699011,'i']])}]},
+{n:'Power',i:'⚡',t:'Electrical & Power',c:[
+ {t:'Power',v:1500,u:L([['W',1],['kW',1e3],['MW',1e6]])},
+ {t:'Apparent Power',v:500,u:L([['VA',1],['kVA',1e3]])},
+ {t:'Battery & Storage (Ah ↔ kWh)',v:100,u:battU,volt:48},
+ {k:'elec'}]},
+{n:'DC Calc',i:'🧮',t:'Data Center Formulas',c:[{k:'pue'},{k:'uf'}]}];
+
+function conv(c){
+ const d=document.createElement('div');d.className='card';
+ d.innerHTML=`<h3>${c.t}</h3><div class="row"><div class="f"><label>ค่า</label><input type="number" inputmode="decimal" step="any" value="${c.v}"></div><div class="f"><label>จากหน่วย</label><select></select></div><button class="swap" title="SI ⇄ Imperial">⇄</button></div>${c.volt?`<div class="row"><div class="f"><label>แรงดันระบบ (V DC)</label><input type="number" inputmode="decimal" id="vb" value="${c.volt}"></div></div>`:''}<div class="res"></div>${c.note?`<div class="note">${c.note}</div>`:''}`;
+ const inp=$('input',d),sel=$('select',d),res=$('.res',d);
+ c.u.forEach((u,i)=>sel.add(new Option(u.n,i)));
+ c.pick=m=>{const i=c.u.findIndex(u=>u.s===m);if(i>=0){sel.value=i;} };
+ const run=()=>{
+  if(c.volt)V=+$('#vb',d).value||1;
+  const u=c.u[sel.value];let b=u.to(+inp.value),ov=null;
+  if(c.pipe){if(u.n==='in'){const k=Object.keys(PIPE).find(k=>PIPE[k]===+inp.value);if(k)b=k/1000;}const mm=b*1000;if(Math.abs(mm-Math.round(mm))<1e-6&&PIPE[Math.round(mm)])ov=PIPE[Math.round(mm)];}
+  res.innerHTML=c.u.map((x,i)=>i==sel.value?'':`<div class="r ${x.s||''}"><b>${fmt(ov!=null&&x.n==='in'?ov:ov!=null&&x.n==='ft'?ov/12:x.from(b))}</b><span>${x.n}</span></div>`).join('');};
+ d.addEventListener('input',run);
+ $('.swap',d).onclick=()=>{const u=c.u[sel.value];const t=u.s==='i'?'s':'i';const j=c.u.findIndex(x=>x.s===t);if(j>=0){const val=c.u[j].from(u.to(+inp.value));inp.value=Number(val.toPrecision(7));sel.value=j;}run();};
+ c.pick(sysMode);run();return d;}
+
+function calc(title,fields,out,note){
+ const d=document.createElement('div');d.className='card';
+ d.innerHTML=`<h3>${title}</h3><div class="row" style="flex-wrap:wrap">${fields.map(f=>`<div class="f" style="flex:1 1 45%"><label>${f.l}</label>${f.o?`<select id="${f.id}">${f.o.map((o,i)=>`<option value="${i}">${o}</option>`).join('')}</select>`:`<input id="${f.id}" type="number" inputmode="decimal" step="any" value="${f.v}">`}</div>`).join('')}</div><div class="res"></div>${note?`<div class="note">${note}</div>`:''}`;
+ const run=()=>{const g={};fields.forEach(f=>g[f.id]=+$('#'+f.id,d).value);
+  $('.res',d).innerHTML=out(g).map(([l,v,big])=>`<div class="r ${big?'big':''}"><b>${v}</b><span>${l}</span></div>`).join('');};
+ d.addEventListener('input',run);run();return d;}
+
+const builders={
+ pue:()=>calc('PUE (Power Usage Effectiveness)',[{id:'t',l:'Total Facility Energy (kWh)',v:1500},{id:'i',l:'IT Equipment Energy (kWh)',v:1000}],
+  g=>{const p=g.t/g.i;return[['PUE',fmt(p),1],['DCiE (1/PUE)',fmt(100/p)+' %'],['Overhead (kWh)',fmt(g.t-g.i)]]},'PUE = Total Facility / IT Equipment. ค่าใกล้ 1.0 ยิ่งดี'),
+ uf:()=>calc('Underfloor Airflow Estimator',[{id:'k',l:'IT Load (kW)',v:100},{id:'dt',l:'ΔT Supply–Return (°C)',v:12},{id:'b',l:'Bypass/Leakage (%)',v:15},{id:'n',l:'จำนวน Perforated Tile',v:40}],
+  g=>{const cfm=3412.14*g.k/(1.08*g.dt*1.8)*(1+g.b/100);return[['Required Airflow (CFM)',fmt(cfm),1],['Required Airflow (m³/hr)',fmt(cfm*1.699011)],['Airflow per Tile (CFM)',fmt(cfm/g.n)],['Airflow per Tile (m³/hr)',fmt(cfm*1.699011/g.n)],['CFM per kW',fmt(cfm/g.k)]]},
+  'CFM = 3.16 × W / ΔT(°F) บวก bypass. เป็นค่าประมาณเบื้องต้น ไม่ใช่ผล CFD'),
+ elec:()=>calc('Electrical Load (Single / Three-Phase)',[{id:'ph',l:'ระบบ',o:['Three-Phase','Single-Phase']},{id:'m',l:'โหมด',o:['รู้ A → หา kW','รู้ kW → หา A']},{id:'v',l:'V (Line-Line / Phase)',v:400},{id:'pf',l:'Power Factor',v:.9},{id:'a',l:'Current (A)',v:100},{id:'w',l:'Real Power (kW)',v:62.35}],
+  g=>{const k=g.ph==0?Math.sqrt(3):1;let A=g.a,kva,kw;if(g.m==0){kva=k*g.v*A/1000;kw=kva*g.pf}else{kw=g.w;kva=kw/g.pf;A=kva*1000/(k*g.v)}
+   return[['Current (A)',fmt(A),1],['kW',fmt(kw)],['kVA',fmt(kva)],['kVAR',fmt(Math.sqrt(Math.max(kva*kva-kw*kw,0)))]]},'3φ: kVA = √3·V·A/1000, 1φ: kVA = V·A/1000, kW = kVA × PF')};
+
+function render(){
+ const T=TABS[cur],m=$('#main');m.innerHTML='';
+ T.c.forEach(c=>m.appendChild(c.k?builders[c.k]():(c.u&&(c.cardEl=conv(c)))));
+ m.scrollTop=0;
+ $('#nav').innerHTML=TABS.map((t,i)=>`<button class="${i==cur?'on':''}" data-i="${i}"><i>${t.i}</i>${t.n}</button>`).join('');}
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;render();}};
+$('#sys').onclick=e=>{const b=e.target.closest('button');if(!b)return;sysMode=b.dataset.s;[...$('#sys').children].forEach(x=>x.classList.toggle('on',x==b));render();};
+$('#th').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';};
+render();
+</script>
+</body>
+</html>
